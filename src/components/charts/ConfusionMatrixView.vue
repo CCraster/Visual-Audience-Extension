@@ -20,7 +20,7 @@ export default {
     // 监听数据准备完全信号
     onViewChangeSignal(){
       let that = this;
-      bus.$on('ViewChange', (data) => {
+      bus.$on('Signal_ConfusionMatrix', (data) => {
         that.data_modelEvaluation = data;
         // modelIterationView.update(that.prepareResultData(that.data_modelEvaluation));
       });

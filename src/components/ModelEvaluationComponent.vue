@@ -45,15 +45,16 @@ export default {
       let that = this;
       bus.$on('DataLoadingCompleted', (data) => {
         that.data_modelEvaluation = data[1];
+        bus.$emit(this.isModelIterationView ? 'Signal_ModelIteration' : 'Signal_ConfusionMatrix', that.data_modelEvaluation);
       });
     },
     // 出发视图改变信号
     emitViewChangeSignal(){
       if(this.isFirstTimeChange){
         setTimeout(() => {  // 延迟出发信号，等混淆矩阵视图加载完成启动信号监听函数，js任务机制
-          bus.$emit('ViewChange', this.data_modelEvaluation);
+          bus.$emit(!this.isModelIterationView ? 'Signal_ConfusionMatrix' : 'Signal_ModelIteration', this.data_modelEvaluation);
         }, 0);
-        this.isFirstTimeChange = false;console.log('change')
+        this.isFirstTimeChange = false;
       }
     },
   },

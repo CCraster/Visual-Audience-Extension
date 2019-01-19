@@ -6,6 +6,7 @@
 <script>
 import bus from '@/eventBus';
 import modelIterationView from '@/charts/modelIterationView.js';
+import { setTimeout } from 'timers';
 
 export default {
   name: 'ModelIterationView',
@@ -37,17 +38,17 @@ export default {
       return data_temp;
     },
     // 监听数据准备完全信号
-    onDataLoadingCompletedSignal(){
+    onModelIterationSignal(){
       let that = this;
-      bus.$on('DataLoadingCompleted', (data) => {
-        that.data_modelEvaluation = data[1];
+      bus.$on('Signal_ModelIteration', (data) => {
+        that.data_modelEvaluation = data;
         modelIterationView.update(that.prepareResultData(that.data_modelEvaluation));
       });
     }
   },
   mounted(){
     modelIterationView.create({target: 'container_modelIterationView', data: []});
-    this.onDataLoadingCompletedSignal();
+    this.onModelIterationSignal();
   }
 }
 </script>
