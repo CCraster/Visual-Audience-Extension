@@ -1,29 +1,30 @@
 <template>
-  <div id="container_trainingDataView">
-    <div id="trainingDataView_config">
+  <div id="container_hiddenStateView">
+    <div id="hiddenStateView_config">
       <label>sourse:</label>
       <el-select v-model="dataChoosed" placeholder="请选择数据源" size="mini" @change="onDataSourseChange($event)">
       <el-option v-for="item in dataAllSourse" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </div>
-    <div id="trainingDataView_main"></div>
+    <div id="hiddenStateView_main"></div>
   </div>
 </template>
 
 <script>
-import trainingDataView from '@/charts/trainingDataView.js';
+import bus from '@/eventBus';
+import hiddenStateView from '@/charts/hiddenStateView.js';
 
 export default {
-  name: 'TrainingDataView',
-  data () {
+  name: 'HiddenStateView',
+  data(){
     return {
-      trainingData: {},
-      dataChoosed: 'layer_hidden_2',
+      data_hiddenLayerValues: {},
+      dataChoosed: 'layer_hidden_1',
     }
   },
   computed:{
     dataAllSourse(){  // 所有的数据源组成的选项option
-      let keys_all = Object.keys(this.trainingData);
+      let keys_all = Object.keys(this.data_hiddenLayerValues);
       let data_sourse_temp = [];
       keys_all.forEach(item => {
         data_sourse_temp.push({value: item, label: item});
@@ -32,38 +33,40 @@ export default {
     }
   },
   methods: {
-    // 读取数据函数
-    async fetch(name_data, type){
-      let path_common = '@/../static/data/';
-      return await d3[type](path_common + name_data);
-    },
     // 监听数据源变化
     onDataSourseChange(data_sourse_selected){
       this.dataChoosed = data_sourse_selected;
-      trainingDataView.update(this.trainingData[this.dataChoosed]);
-      console.log(this.dataChoosed);
+      hiddenStateView.update(this.data_hiddenLayerValues[this.dataChoosed]);
+      // console.log(this.dataChoosed);
+    },
+    // 监听数据准备完全信号
+    onDataLoadingCompletedSignal(){
+      let that = this;
+      bus.$on('DataLoadingCompleted', (data) => {
+        that.data_hiddenLayerValues = data[0];
+        hiddenStateView.update(that.data_hiddenLayerValues[that.dataChoosed]);
+      });
     }
   },
   async mounted(){
-    let target = 'trainingDataView_main';
-    this.trainingData = await this.fetch('log_neuron_state.json', 'json');
-    trainingDataView.create({target: target, data: this.trainingData[this.dataChoosed]});
+    hiddenStateView.create({target: 'hiddenStateView_main', data: this.data_hiddenLayerValues[this.dataChoosed]});
+    this.onDataLoadingCompletedSignal();
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#container_trainingDataView{
+#container_hiddenStateView{
   height: 100%;
 }
-#trainingDataView_config{
+#hiddenStateView_config{
   height: 36px;
   padding-top: 4px;
   box-sizing: border-box;
   /* background-color: antiquewhite; */
 }
-#trainingDataView_main{
+#hiddenStateView_main{
   height: calc(100% - 36px);
   /* background-color: azure; */
 }

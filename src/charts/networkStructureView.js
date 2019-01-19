@@ -84,7 +84,6 @@ chart.init = function(){
     input_temp.style.display = 'block';
     input_temp.style['border-color'] = color_fill;
     document.getElementById(this.config.target).appendChild(input_temp);
-    console.log(input_temp.style['border-color'])
 
     g_neuronGroup.append('rect')  // 绘制每层的底框
                 .attr('x', 0 - padding_rect)

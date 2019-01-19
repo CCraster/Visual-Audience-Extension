@@ -12,7 +12,6 @@ chart.create = function(config){
                       .append('svg')
                       .attr('width', this.config.width_svg)
                       .attr('height', this.config.height_svg);
-  this.update();
 }
 
 chart.init = function(){
