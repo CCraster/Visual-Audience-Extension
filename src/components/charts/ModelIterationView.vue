@@ -1,5 +1,6 @@
 <template>
   <div id="container_modelIterationView">
+    <div class='tooltips'></div>
   </div>
 </template>
 
@@ -56,6 +57,18 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #container_modelIterationView{
+  position: relative;
   height: 100%;
+}
+.tooltips{
+  width: 100px;
+  height: 90px;
+  position: absolute;
+  display: none;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  border-radius: 2px;
+  padding: 10px;
+  text-align: center;
 }
 </style>

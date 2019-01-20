@@ -35,7 +35,7 @@ export default {
     return {
       data_modelEvaluation: [],
       views: {'modelIterationView': ModelIterationView, 'confusionMatrixView': ConfusionMatrixView},
-      isModelIterationView: true,
+      isModelIterationView: false,
       isFirstTimeChange: true,
     }
   },

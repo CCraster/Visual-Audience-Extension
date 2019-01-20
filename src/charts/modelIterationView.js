@@ -22,6 +22,7 @@ chart.create = function(config){
 chart.update = function(_data){
   d3.select('#g_container_target').remove();
   let data = _data || this.config.data;
+  if(data.length === 0) return;
   let margin = this.config.margin,
       width_svg = this.config.width_svg,
       height_svg = this.config.height_svg,
@@ -83,7 +84,103 @@ chart.update = function(_data){
                     .style("mix-blend-mode", "multiply")
                     .attr("d", d => line(d['value']))
               .call(transition);
+
+  svg.call(drawLegend); // 绘制图例
+  svg.call(hoverOnModelIteration); // tooltips
   
+  // 函数：绘制legend
+  function drawLegend(svg){
+    let width_legend = 18, height_legend = 2;
+    let width_rectAndText = 50, height_rectAndText = 15;
+    let padding_rectAndText = 5;
+    let g_legend_modelIteration = svg.append('g')
+                                      .attr('id', 'g_legend_modelIteration')
+                                      .attr('transform', `translate(${width_svg - margin.right - width_rectAndText}, ${yScale(1)})`);
+    g_legend_modelIteration.selectAll('rect')  // legend图形
+                            .data(Object.keys(colorRule))
+                            .enter()
+                            .append('rect')
+                            .attr('x', 0)
+                            .attr('y', (d, i) => height_rectAndText * i)
+                            .attr('width', width_legend)
+                            .attr('height', height_legend)
+                            .attr('fill', d => colorRule[d]);
+    g_legend_modelIteration.selectAll('text')  // legend文字
+                          .data(Object.keys(colorRule))
+                          .enter()
+                          .append('text')
+                          .attr('x', width_legend + padding_rectAndText)
+                          .attr('y', (d, i) => height_rectAndText * i)
+                          .attr('dy', '.5em')
+                          .attr("font-weight", "bold")
+                          .attr("font-size", "80%")
+                          .text(d => d);
+  }
+
+  // 函数：鼠标悬浮显示tooltips
+  function hoverOnModelIteration(svg){
+    let radius_tooltips = 4;
+    svg.style('position', 'relative');
+    svg.on('mousemove', handleMouseMoved)
+      .on('mouseenter', handleMouseEntered)
+      .on('mouseleave', handleMouseLeft);
+    let g_tooltips = svg.append('g')
+                        .attr('display', 'none');
+    let lineGenerator = d3.line()
+                          .x(d => xScale(d[0]))
+                          .y(d => yScale(d[1]));
+    g_tooltips.append('path')
+              .attr('stroke', 'gray')
+              .attr('opacity', '.5')
+              .attr('fill', 'none')
+              .attr('d', lineGenerator([[0, 0], [0, 1]]));
+    g_tooltips.selectAll('circle')
+              .data(d3.range(2))
+              .enter()
+              .append('circle')
+              .attr('cx', (d, i) => xScale(0))
+              .attr('cy', (d, i) => yScale(data[i]['value'][0]))
+              .attr('r', radius_tooltips)
+              .attr('fill', 'white')
+              .attr('stroke', (d, i) => colorRule[data[i]['name']]);
+    function handleMouseMoved(){
+      d3.event.preventDefault();
+      let xm = Math.round(xScale.invert(d3.event.layerX));
+      g_tooltips.select('path')
+                .attr('d', lineGenerator([[xm, 0], [xm, 1]]));
+      g_tooltips.selectAll('circle')
+                .data(d3.range(2))
+                .attr('cx', (d, i) => xScale(xm))
+                .attr('cy', (d, i) => yScale(data[i]['value'][xm]));
+      let div_tooltips = d3.select('.tooltips');
+      div_tooltips.html(
+        `<span style="display: inline-block; margin-bottom: 8px;">第${xm + 1}次训练</span><br />
+        <span style="float: left;">loss: </span><br />
+        <span style="float: left;">${data[0]['value'][xm].toFixed(10)}</span><br />
+        <span style="float: left;">acc: </span><br />
+        <span style="float: left;">${data[1]['value'][xm].toFixed(10)}</span><br />
+        `
+      );
+      div_tooltips.style('top', (height_svg - margin.top - margin.bottom) / 2 - 55 + margin.top + 'px');
+      div_tooltips.style('left', (x = d3.event.layerX) => { 
+        if(width_svg - x > 130)
+          return x + 10 + 'px';
+        else
+          return x - 120 - 10 + 'px';
+      });
+
+    }
+    function handleMouseEntered(){
+      g_tooltips.attr('display', null);
+      d3.select('.tooltips').style('display', 'block');
+    }
+    function handleMouseLeft(){
+      g_tooltips.attr('display', 'none');
+      d3.select('.tooltips').style('display', 'none');
+    }
+  }
+
+  // 函数：过度动画
   function transition(path){
     path.transition()
         .duration(7500)
