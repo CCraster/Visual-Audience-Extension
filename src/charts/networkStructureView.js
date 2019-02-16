@@ -18,11 +18,13 @@ chart.create = function(config){
                       .append('svg')
                       .attr('width', this.config.width_svg)
                       .attr('height', this.config.height_svg);
-  this.init();
+  this.update();
 }
 
-chart.init = function(){
-  let data = this.config.data;
+chart.update = function(_data){
+  d3.select('#g_container_networkStructure').remove();
+  let data = _data || this.config.data;
+  if(data.length === 0) return;
   let margin = this.config.margin,
       width_svg = this.config.width_svg,
       height_svg = this.config.height_svg,
@@ -73,17 +75,32 @@ chart.init = function(){
                 })();
     
     
-    let input_example = document.getElementById('input_example'); // 生成input
-    let input_temp = input_example.cloneNode(true);
-    input_temp.id = `input-${single_layer.name}`;
-    input_temp.value = single_layer.value;
-    input_temp.style.height = 2 * neuron_radius - padding_rect + 'px';
-    input_temp.style.width = 3 * neuron_radius + 'px';
-    input_temp.style.top = (2 * neuron_radius + neuron_padding * 2) * i + margin.top - padding_rect + 'px';
-    input_temp.style.left = (width_neuronInput - 3 * neuron_radius) + 'px';
-    input_temp.style.display = 'block';
-    input_temp.style['border-color'] = color_fill;
-    document.getElementById(this.config.target).appendChild(input_temp);
+    // let input_example = document.getElementById('input_example'); // 生成input
+    // let input_temp = input_example.cloneNode(true);
+    // input_temp.id = `input-${single_layer.name}`;
+    // input_temp.value = single_layer.value;
+    // input_temp.style.height = 2 * neuron_radius - padding_rect + 'px';
+    // input_temp.style.width = 3 * neuron_radius + 'px';
+    // input_temp.style.top = (2 * neuron_radius + neuron_padding * 2) * i + margin.top - padding_rect + 'px';
+    // input_temp.style.left = (width_neuronInput - 3 * neuron_radius) + 'px';
+    // input_temp.style.display = 'block';
+    // input_temp.style['border-color'] = color_fill;
+    // document.getElementById(this.config.target).appendChild(input_temp);
+
+    g_neuronGroup.append('rect')
+                .attr('x', 0 - 37 - 2)
+                .attr('y', 0 - 2)
+                .attr('width', 32)
+                .attr('height', neuron_radius * 2 + 4)
+                .attr('fill', 'none')
+                .attr('stroke', color_fill);
+    g_neuronGroup.append('text')
+                .attr('x', 0 - 37)
+                .attr('y', neuron_radius)
+                .attr('dy', '.25em')
+                .attr('fill', color_fill)
+                .style('font-weight', 'bold')
+                .text(single_layer.value)
 
     g_neuronGroup.append('rect')  // 绘制每层的底框
                 .attr('x', 0 - padding_rect)
@@ -94,28 +111,28 @@ chart.init = function(){
                 .style('stroke', color_fill)
                 .style('stroke-opacity', .7)
                 .style('stroke-dasharray', [4, 2]);
-    if(i > 0 && i < data.length - 1){ // 绘制隐层后面的减号
-      g_neuronGroup.append('text')
-                  .attr('x', width_neuron_available + padding_rect)
-                  .attr('y', neuron_radius + padding_rect)
-                  .attr('dx', '.25em')
-                  .attr('dy', '.25em')
-                  .style('fill', color_fill)
-                  .attr("font-weight", "bold")
-                  .attr("font-size", "200%")
-                  .text('-');
-    }
-    if(i < data.length - 1){  // 绘制增加隐层的图形
-      g_neuronGroup.append('text')
-                  .attr('x', width_neuron_available / 2)
-                  .attr('y', neuron_radius * 2 + neuron_padding)
-                  .attr('dx', '-.25em')
-                  .attr('dy', '.25em')
-                  .style('fill', colorRule['layer_hidden'])
-                  .attr("font-weight", "bold")
-                  .attr("font-size", "200%")
-                  .text('+');
-    }
+    // if(i > 0 && i < data.length - 1){ // 绘制隐层后面的减号
+    //   g_neuronGroup.append('text')
+    //               .attr('x', width_neuron_available + padding_rect)
+    //               .attr('y', neuron_radius + padding_rect)
+    //               .attr('dx', '.25em')
+    //               .attr('dy', '.25em')
+    //               .style('fill', color_fill)
+    //               .attr("font-weight", "bold")
+    //               .attr("font-size", "200%")
+    //               .text('-');
+    // }
+    // if(i < data.length - 1){  // 绘制增加隐层的图形
+    //   g_neuronGroup.append('text')
+    //               .attr('x', width_neuron_available / 2)
+    //               .attr('y', neuron_radius * 2 + neuron_padding)
+    //               .attr('dx', '-.25em')
+    //               .attr('dy', '.25em')
+    //               .style('fill', colorRule['layer_hidden'])
+    //               .attr("font-weight", "bold")
+    //               .attr("font-size", "200%")
+    //               .text('+');
+    // }
 
     let start_pos;  // 判断g容器的宽度是否足够
     let num_neuron_max; // 保存宽度能够容纳的最多的圆的数目

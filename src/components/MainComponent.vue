@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import bus from '@/eventBus';
+// import bus from '@/eventBus';
 import Header from '@/components/Header';
 import NetworkStructureView from '@/components/charts/NetworkStructureView'
 import ModelEvaluationComponent from '@/components/ModelEvaluationComponent';
@@ -34,9 +34,6 @@ export default {
   },
   data(){
     return {
-      data_hiddenLayerValues: {},
-      data_modelEvaluation: [],
-      path_dataSource: 'old',
     }
   },
   methods: {
@@ -51,9 +48,9 @@ export default {
     },
   },
   async mounted(){
-    this.data_hiddenLayerValues = await this.fetch(this.path_dataSource + '/log_neuron_state.json', 'json');
-    this.data_modelEvaluation = await this.fetch(this.path_dataSource + '/loss_save.1.json', 'json');
-    this.emitDataLoadingCompletedSignal();
+    // this.data_hiddenLayerValues = await this.fetch(this.path_dataSource + '/log_neuron_state.json', 'json');
+    // this.data_modelEvaluation = await this.fetch(this.path_dataSource + '/loss_save.1.json', 'json');
+    // this.emitDataLoadingCompletedSignal();
   }
 }
 </script>

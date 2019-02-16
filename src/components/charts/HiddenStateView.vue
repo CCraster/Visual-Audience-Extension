@@ -3,7 +3,7 @@
     <div id="hiddenStateView_config">
       <label>sourse:</label>
       <el-select v-model="dataChoosed" placeholder="请选择数据源" size="mini" @change="onDataSourseChange($event)">
-      <el-option v-for="item in dataAllSourse" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-option v-for="item in dataAllSourse" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </div>
     <div id="hiddenStateView_main"></div>

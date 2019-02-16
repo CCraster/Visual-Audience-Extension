@@ -81,7 +81,7 @@ chart.update = function(_data){
                     .attr("opacity", .6)
                     .style("mix-blend-mode", "multiply")
                     .attr("d", d => line(d))
-              .call(transition);
+              // .call(transition);
 
   function transition(path) {
     path.transition()
