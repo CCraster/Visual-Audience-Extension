@@ -1,10 +1,11 @@
 <template>
   <div id="container_hiddenStateView">
     <div id="hiddenStateView_config">
-      <label>sourse:</label>
+      <label class="label_dataSource">source:</label>
       <el-select v-model="dataChoosed" placeholder="请选择数据源" size="mini" @change="onDataSourseChange($event)">
         <el-option v-for="item in dataAllSourse" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
+      <el-checkbox v-model="flag_emphasizeSingleNeuron">Emphasize Single Neuron</el-checkbox>
     </div>
     <div id="hiddenStateView_main"></div>
   </div>
@@ -19,7 +20,8 @@ export default {
   data(){
     return {
       data_hiddenLayerValues: {},
-      dataChoosed: 'layer_hidden_1',
+      dataChoosed: 'layer_hidden_4',
+      flag_emphasizeSingleNeuron: false,
     }
   },
   computed:{
@@ -31,6 +33,12 @@ export default {
       });
       return data_sourse_temp;
     }
+  },
+  watch:{
+    // 视图叠加顺序的flag改变，就相应改变hiddenStateView中的flag
+    flag_emphasizeSingleNeuron(flag_new){
+      hiddenStateView.reConfig(flag_new);
+    },
   },
   methods: {
     // 监听数据源变化
@@ -49,7 +57,11 @@ export default {
     }
   },
   async mounted(){
-    hiddenStateView.create({target: 'hiddenStateView_main', data: this.data_hiddenLayerValues[this.dataChoosed]});
+    hiddenStateView.create({
+      target: 'hiddenStateView_main', 
+      data: this.data_hiddenLayerValues[this.dataChoosed],
+      flag_emphasizeSingleNeuron: this.flag_emphasizeSingleNeuron,
+    });
     this.onDataLoadingCompletedSignal();
   }
 }
@@ -64,10 +76,16 @@ export default {
   height: 36px;
   padding-top: 4px;
   box-sizing: border-box;
-  /* background-color: antiquewhite; */
 }
 #hiddenStateView_main{
   height: calc(100% - 36px);
-  /* background-color: azure; */
+}
+.label_dataSource{
+  margin-left: 10px;
+}
+.el-checkbox{
+  margin-top: 4px;
+  margin-right: 10px;
+  float: right;
 }
 </style>

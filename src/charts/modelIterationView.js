@@ -83,7 +83,7 @@ chart.update = function(_data){
                     .attr("stroke", d => colorRule[d.name])
                     .style("mix-blend-mode", "multiply")
                     .attr("d", d => line(d['value']))
-              .call(transition);
+              // .call(transition);
 
   svg.call(drawLegend); // 绘制图例
   svg.call(hoverOnModelIteration); // tooltips

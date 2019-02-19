@@ -77,6 +77,7 @@ export default {
 }
 .modelEvaluationComponent_switch{
   float: right;
+  margin-top: 4px;
   margin-right: 10px;
 }
 #modelEvaluationComponent_main{

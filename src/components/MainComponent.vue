@@ -72,6 +72,7 @@ export default {
   margin: 0px 6px 0px 6px;
   width: 60% !important;
   box-shadow: 1px 1px 4px #aaa;
+  border-radius: 3px;
 }
 .view-modelEvaluationComponent{
   background-color: #fff;
@@ -79,6 +80,7 @@ export default {
   margin: 0px 6px 0px 0px;
   padding: 0;
   box-shadow: 1px 1px 4px #aaa;
+  border-radius: 3px;
 }
 .view-trainingData{
   background-color: #fff;
@@ -87,5 +89,6 @@ export default {
   margin: 6px 6px 6px 6px;
   padding: 0;
   box-shadow: 1px 1px 4px #aaa;
+  border-radius: 3px;
 }
 </style>
