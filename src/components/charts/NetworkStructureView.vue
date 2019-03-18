@@ -47,7 +47,7 @@ export default {
       data_hiddenLayerValues: {},
       data_modelEvaluation: [],
       data_networkStructure: [],
-      path_dataSource: 'old',
+      path_dataSource: 'hidden_four',
     }
   },
   methods: {
@@ -85,11 +85,13 @@ export default {
     async handleRetrainClicked(){
       let file_dir = {
         4: 'hidden_four', 
+        3: 'hidden_three',
         2: 'hidden_two', 
         1: 'hidden_one', 
-        3: 'old', 
+        0: 'old', 
       };
-      this.path_dataSource = file_dir[this.config_hiddenLayer.split(',').length];
+      if(this.config_hiddenLayer.length === 0) this.path_dataSource = file_dir[0];  // 0代表的数据，隐含层值的变化不是那种“0或1”的不规则形状
+      else this.path_dataSource = file_dir[this.config_hiddenLayer.split(',').length];
       await this.dataLoading();
       networkStructureView.update(this.data_networkStructure);
     },

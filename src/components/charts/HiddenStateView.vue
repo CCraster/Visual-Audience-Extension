@@ -20,7 +20,7 @@ export default {
   data(){
     return {
       data_hiddenLayerValues: {},
-      dataChoosed: 'layer_hidden_4',
+      dataChoosed: 'layer_output',
       flag_emphasizeSingleNeuron: false,
     }
   },
@@ -51,7 +51,7 @@ export default {
     onDataLoadingCompletedSignal(){
       let that = this;
       bus.$on('DataLoadingCompleted', (data) => {
-        that.data_hiddenLayerValues = data[0];
+        that.data_hiddenLayerValues = data[0];console.log(data[0]);
         hiddenStateView.update(that.data_hiddenLayerValues[that.dataChoosed]);
       });
     }
